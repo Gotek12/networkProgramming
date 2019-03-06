@@ -1,0 +1,3 @@
+-l - listen(słuchaj)
+-v (verbose) gadatliwy
+-C --crlf - użyj crlf jako sekwencji eol

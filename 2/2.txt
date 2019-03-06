@@ -1,0 +1,11 @@
+-l - listen(słuchaj)
+-v (verbose) gadatliwy
+--crlf - użyj crlf jako sekwencji eol
+
+pnetcat - pozwala ręcznie się łączyć z serwerami (tekstowymi)
+
+ip addr show - pokaz adres 
+
+ncat -v -l 20123 - serwer
+-u -udp
+-C zamienia \n na \r\n
