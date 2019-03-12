@@ -1,3 +1,4 @@
+//https://www.geeksforgeeks.org/tcp-server-client-implementation-in-c/
 #include <stdio.h> 
 #include <string.h> 
 #include <stdlib.h>
@@ -10,6 +11,8 @@
 #include <netinet/in.h>
 
 #define MAX 4096 //stala dl linii 
+int extractNum(char linia[]);
+char* itoa(int value, char* result, int base);
 
 //ncat -v -C 127.0.0.1 8888
 int main(int argc, char* argv[]){
@@ -47,27 +50,93 @@ int main(int argc, char* argv[]){
 	socklen_t sin_size = sizeof( cli );
 	
 	printf("Oczekuje na polaczenie... \n");
-	while(1){
-		add = accept(soc, (struct sockaddr*)&cli, &sin_size);
-		if(add < 0){
-			perror("blad accept");
-			exit(EXIT_FAILURE);
-		}else{
-			int ret;
-			int liczba = 0;
-			int suma = 0;
-			while((ret = read(add, buf, sizeof(buf)-1)) > 0){
-					printf("%s\n", buf);
-					
-					
-			}
-			//printf("%s\n", buf);
-			//send(add, komunikat, 15, 0);
-		}
-		
-		close(add);
+	
+	add = accept(soc, (struct sockaddr*)&cli, &sin_size);
+	if(add < 0){
+		perror("blad accept");
+		exit(EXIT_FAILURE);
+	}
+	
+	int licz = 0;
+	while(1){	
+		read(add, buf, sizeof(buf));
+		licz = extractNum(buf);
+		//printf("%d\n", licz)
+
+		send(add, itoa(licz, buf, 10), sizeof(itoa(licz, buf, 10)), 0);
+		memset(&buf, 0, sizeof(buf));	
 	}
 	
 	close(soc);
 	return 0;
+}
+
+
+//funkcja czytajaca liczby z bufora
+int extractNum(char linia[]){
+	const char *p = linia;
+	int suma = 0, liczba = 0;
+	int i;
+	
+	for(i = 0; i < strlen(linia); i++){
+		
+		if(*p == ' '){
+
+			suma += liczba;
+			liczba = 0; //zerujemy
+			p++;
+
+		}else{
+
+			liczba = 10 * liczba + *p - '0';
+			p++;
+
+		}
+
+	}
+
+	return suma;
+}
+
+void swap(char *x, char *y) {
+	char t = *x; *x = *y; *y = t;
+}
+char* reverse(char *buffer, int i, int j)
+{
+	while (i < j)
+		swap(&buffer[i++], &buffer[j--]);
+
+	return buffer;
+}
+char* itoa(int value, char* buffer, int base)
+{
+	// invalid input
+	if (base < 2 || base > 32)
+		return buffer;
+
+	// consider absolute value of number
+	int n = abs(value);
+
+	int i = 0;
+	while (n)
+	{
+		int r = n % base;
+
+		if (r >= 10) 
+			buffer[i++] = 65 + (r - 10);
+		else
+			buffer[i++] = 48 + r;
+
+		n = n / base;
+	}
+
+	if (i == 0)
+		buffer[i++] = '0';
+
+	if (value < 0 && base == 10)
+		buffer[i++] = '-';
+
+	buffer[i] = '\0'; // null terminate string
+
+	return reverse(buffer, 0, i - 1);
 }
