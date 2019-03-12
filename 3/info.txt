@@ -1,0 +1,16 @@
+całkowite dodatnie
+w momęcie gdy klient dluzej nie aktywny to serwer zamyka polaczenie
+
+co jesli nie spelnia wymagan
+ustalamy limit linii
+asci to liczba
+
+liczba = 0;
+liczba = 10*liczba + *p - '0';
+linia 4kiloBajty - stala dl linii
+
+wykrywanie przepelnien (mamy a i b, suma)
+	suma = a+b
+	if(a>UINT_MAX -b)
+	
+
