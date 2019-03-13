@@ -9,8 +9,11 @@
 #include <sys/socket.h>
 #include <errno.h> 
 #include <netinet/in.h>
+#include <limits.h>
 
-#define MAX 4096 //stala dl linii 
+//#define MAX 4096 //stala dl linii 
+#define MAX 20 //stala dl linii 
+
 int extractNum(char linia[]);
 char* itoa(int value, char* result, int base);
 
@@ -62,7 +65,6 @@ int main(int argc, char* argv[]){
 		read(add, buf, sizeof(buf));
 		licz = extractNum(buf);
 		//printf("%d\n", licz)
-
 		send(add, itoa(licz, buf, 10), sizeof(itoa(licz, buf, 10)), 0);
 		memset(&buf, 0, sizeof(buf));	
 	}
@@ -71,6 +73,12 @@ int main(int argc, char* argv[]){
 	return 0;
 }
 
+int overFlow(int a, int b){
+	if(a > INT_MAX -b){
+		return -1;
+	}
+	return 0;
+}
 
 //funkcja czytajaca liczby z bufora
 int extractNum(char linia[]){
@@ -81,6 +89,10 @@ int extractNum(char linia[]){
 	for(i = 0; i < strlen(linia); i++){
 		
 		if(*p == ' '){
+
+			if(overFlow(suma, liczba) < 0){
+				printf("ERROR\n");
+			}
 
 			suma += liczba;
 			liczba = 0; //zerujemy
@@ -108,6 +120,7 @@ char* reverse(char *buffer, int i, int j)
 
 	return buffer;
 }
+
 char* itoa(int value, char* buffer, int base)
 {
 	// invalid input
